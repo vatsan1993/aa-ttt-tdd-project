@@ -1,6 +1,6 @@
 const Screen = require('./screen');
 const Cursor = require('./cursor');
-
+const ComputerPlayer = require('./computer-player');
 class TTT {
   constructor() {
     this.playerTurn = 'O';
@@ -38,6 +38,14 @@ class TTT {
       if (winner) {
         TTT.endGame(winner);
       }
+      this.playerTurn = this.playerTurn == 'X' ? 'O' : 'X';
+      let computerMove = ComputerPlayer.getSmartMove(
+        this.grid,
+        this.playerTurn
+      );
+      console.log(computerMove);
+      this.grid[computerMove.row][computerMove.col] = this.playerTurn;
+      Screen.setGrid(computerMove.row, computerMove.col, this.playerTurn);
       this.playerTurn = this.playerTurn == 'X' ? 'O' : 'X';
     } else {
       Screen.setMessage('Unable to place the marker');

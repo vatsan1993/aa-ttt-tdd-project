@@ -1,4 +1,4 @@
-const TTT = require('./ttt');
+const TTT = require('./ttt.js');
 
 class ComputerPlayer {
   static getValidMoves(grid) {
@@ -13,6 +13,76 @@ class ComputerPlayer {
       }
     }
     return validMoves;
+  }
+
+  static checkWin(grid) {
+    // Return 'X' if player X wins
+    // Return 'O' if player O wins
+    for (let row of grid) {
+      let valInRow = [];
+      for (let val of row) {
+        if (!valInRow.includes(val)) {
+          valInRow.push(val);
+        }
+      }
+      if (valInRow.length === 1 && valInRow[0] !== ' ') {
+        // console.log(valInDiag);
+        return valInRow[0];
+      }
+    }
+    // checking columns
+    for (let col = 0; col < grid[0].length; col++) {
+      let valInCol = [];
+      for (let row of grid) {
+        let val = row[col];
+        if (!valInCol.includes(val)) {
+          valInCol.push(val);
+        }
+      }
+      if (valInCol.length === 1 && valInCol[0] !== ' ') {
+        // console.log(valInCol);
+        return valInCol[0];
+      }
+    }
+    // diag 1
+    let valInDiag = [];
+    for (let i = 0; i < grid.length; i++) {
+      let val = grid[i][i];
+      if (!valInDiag.includes(val)) {
+        valInDiag.push(val);
+      }
+    }
+    if (valInDiag.length === 1 && valInDiag[0] !== ' ') {
+      // console.log(valInDiag);
+      return valInDiag[0];
+    }
+    // diag 2
+    valInDiag = [];
+    for (let i = 0; i < grid.length; i++) {
+      let val = grid[i][grid.length - i - 1];
+      if (!valInDiag.includes(val)) {
+        valInDiag.push(val);
+      }
+    }
+    if (valInDiag.length === 1 && valInDiag[0] !== ' ') {
+      // console.log(valInDiag);
+      return valInDiag[0];
+    }
+
+    // Return 'T' if the game is a tie
+    let spaces = 0;
+    for (let row of grid) {
+      for (let val of row) {
+        if (val == ' ') {
+          spaces++;
+        }
+      }
+    }
+    if (spaces == 0) {
+      return 'T';
+    }
+    // Return false if the game has not ended
+    return false;
   }
 
   static randomMove(grid) {
@@ -43,7 +113,7 @@ class ComputerPlayer {
     for (let move of validMoves) {
       let { row, col } = move;
       grid[row][col] = symbol;
-      let winner = TTT.checkWin(grid);
+      let winner = ComputerPlayer.checkWin(grid);
       if (winner === symbol) {
         winningMoves.push(move);
       }
